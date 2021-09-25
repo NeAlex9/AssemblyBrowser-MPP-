@@ -33,8 +33,30 @@ namespace AssemblyBrowserLib
                 }
             }
 
+            var namespaces = new List<NamespaceData>();
+            foreach (var pair in NamespaceTypesDic)
+            {
+                namespaces.Add(new NamespaceData(pair.Key, pair.Value));
+            }
+
+            return new AssemblyData(namespaces);
+        }       
+
+        private string GetTypeName(Type type)
+        {
+            if (type.IsClass) return "class";
+            if (type.IsInterface) return "interface";
+            if (type.IsEnum) return "enum";
+            if (type.IsValueType && !type.IsPrimitive) return "struct";
             return null;
-        }       //!!!!!!!!!!!!!!!!!
+        }
+
+        private string GetTypeAccessModifier(Type type)
+        {
+            if (type.IsNotPublic) return "internal";
+
+            return "public";
+        }
 
         private TypeData GetTypeData(Type type)
         {
@@ -45,7 +67,7 @@ namespace AssemblyBrowserLib
 
             foreach (var property in type.GetProperties()) members.Add(GetProperty(property));
 
-            return new TypeData("", type.Name, GetAccessModifier(type), members);
+            return new TypeData(GetTypeName(type), type.Name, GetTypeAccessModifier(type), members);
         }
 
         private string GetAccessModifier(dynamic methodInf)

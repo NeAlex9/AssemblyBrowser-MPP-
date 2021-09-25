@@ -47,7 +47,6 @@
     <Compile Include="DataHolders\TypesMembers\FieldData.cs" />
     <Compile Include="DataHolders\TypesMembers\MethodData.cs" />
     <Compile Include="DataHolders\NamespaceData.cs" />
-    <Compile Include="MethodBrowser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataHolders\TypesMembers\PropertyData.cs" />
     <Compile Include="DataHolders\TypeData.cs" />
