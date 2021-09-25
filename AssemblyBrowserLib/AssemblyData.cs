@@ -8,9 +8,11 @@ namespace AssemblyBrowserLib
 {
     public class AssemblyData
     {
-        public AssemblyData()
-        {
+        public List<NamespaceData> Namespaces{ get; private set; }
 
+        public AssemblyData(List<NamespaceData> namespaces)
+        {
+            this.Namespaces = namespaces;
         }
     }
 }

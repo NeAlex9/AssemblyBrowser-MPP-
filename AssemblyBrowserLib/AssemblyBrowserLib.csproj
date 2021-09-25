@@ -42,7 +42,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyData.cs" />
+    <Compile Include="TypesMembers\FieldData.cs" />
+    <Compile Include="TypesMembers\MethodData.cs" />
+    <Compile Include="NamespaceData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypesMembers\PropertyData.cs" />
+    <Compile Include="TypeData.cs" />
+    <Compile Include="TypesMembers\TypesMember.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
