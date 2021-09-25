@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{369631A6-0103-4D2B-BD80-D6E57DB4E452}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AssemblyBrowserLib</RootNamespace>
-    <AssemblyName>AssemblyBrowserLib</AssemblyName>
+    <ProjectGuid>{C0F9CD0B-58D0-4128-B4EA-7C48F0958B44}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>AssemblyBrowser</RootNamespace>
+    <AssemblyName>AssemblyBrowser</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,18 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyBrowser.cs" />
-    <Compile Include="DataHolders\AssemblyData.cs" />
-    <Compile Include="DataHolders\Modifiers.cs" />
-    <Compile Include="DataHolders\TypesMembers\FieldData.cs" />
-    <Compile Include="DataHolders\TypesMembers\MethodData.cs" />
-    <Compile Include="DataHolders\NamespaceData.cs" />
-    <Compile Include="MethodBrowser.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DataHolders\TypesMembers\PropertyData.cs" />
-    <Compile Include="DataHolders\TypeData.cs" />
-    <Compile Include="DataHolders\TypesMembers\TypesMember.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AssemblyBrowserLib\AssemblyBrowserLib.csproj">
+      <Project>{369631A6-0103-4D2B-BD80-D6E57DB4E452}</Project>
+      <Name>AssemblyBrowserLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
