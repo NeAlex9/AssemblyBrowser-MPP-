@@ -10,7 +10,7 @@ namespace AssemblyBrowserLib
     public class AssemblyBrowser
     {
         private BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-
+       
         public Dictionary<string, List<TypeData>> NamespaceTypesDic { get; private set; }
 
         public AssemblyBrowser()
@@ -83,6 +83,11 @@ namespace AssemblyBrowserLib
                 }
             }
 
+            foreach (var constructor in type.GetConstructors(bindingFlags))
+            {
+                members.Add(GetConstructor(constructor));
+            }
+
             foreach (var field in type.GetFields(bindingFlags)) members.Add(GetFiled(field));
 
             foreach (var property in type.GetProperties(bindingFlags)) members.Add(GetProperty(property));
@@ -92,11 +97,18 @@ namespace AssemblyBrowserLib
 
         private string GetAccessModifier(dynamic inf)
         {
-            if (inf.IsPrivate) return "private";
-            if (inf.IsPublic) return "public";
-            if (inf.IsAssembly) return "internal";
-            if (inf.IsFamilyAndAssembly) return "private protected";
-            return "protected internal";
+            try
+            {
+                if (inf.IsPrivate) return "private";
+                if (inf.IsPublic) return "public";
+                if (inf.IsAssembly) return "internal";
+                if (inf.IsFamilyAndAssembly) return "private protected";
+                return "protected internal";
+            }
+            catch (Exception e)
+            {
+                return "";
+            }
         }
 
         private Modifiers GetMethodModifiers(MethodInfo methodInf)
@@ -110,21 +122,34 @@ namespace AssemblyBrowserLib
             return modifier;
         }
 
-        private Dictionary<string, string> GetParameters(MethodInfo methodInf)
+        private Dictionary<string, string> GetParameters(dynamic methodInf)
         {
             var parameters = new Dictionary<string, string>();
-            foreach (ParameterInfo parameterInfo in methodInf.GetParameters())
+            try
             {
-                parameters.Add(parameterInfo.Name, parameterInfo.ParameterType.Name);
-            }
+                foreach (ParameterInfo parameterInfo in methodInf.GetParameters())
+                {
+                    parameters.Add(parameterInfo.Name, parameterInfo.ParameterType.Name);
+                }
 
-            return parameters;
+                return parameters;
+            }
+            catch (Exception e)
+            {
+                return new Dictionary<string, string>();
+            }
         }
 
         private DataContainer GetMethod(MethodInfo methodInf)
         {
             return new MethodData(methodInf.Name, GetAccessModifier(methodInf),
                 methodInf.ReturnType.Name, GetParameters(methodInf), GetMethodModifiers(methodInf));
+        }
+
+        private DataContainer GetConstructor(ConstructorInfo constructor)
+        {
+            return new MethodData(constructor.Name, GetAccessModifier(constructor),
+                "", GetParameters(constructor), 0);
         }
 
         private Modifiers GetFieldModifiers(FieldInfo fieldInfo)
