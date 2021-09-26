@@ -1,51 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AssemblyBrowserLib
 {
-    public class PropertyData : TypesMember
+    public class PropertyData : DataContainer
     {
         public string PropertyType { get; private set; }
 
-        public Modifiers Modifiers { get; private set; }
-        // getter setter
+        public MethodInfo[] Accessors { get; private set; }
 
-        public PropertyData(string name, string accessModifier, string propertyType, Modifiers modifiers) : base(
-            name, accessModifier)
+        public PropertyData(string name, string accessModifier, string propertyType, Modifiers modifiers, MethodInfo[] accessors) : base(
+            name, accessModifier, modifiers)
         {
             this.PropertyType = propertyType;
-            this.Modifiers = modifiers;
+            this.Accessors = accessors;
         }
 
-        private string GetModifier()
+        protected override string ConvertModifierToString()
         {
             string modifiers = string.Empty;
             if ((this.Modifiers & Modifiers.Sealed) != 0) modifiers = modifiers + "sealed ";
-            if ((this.Modifiers & Modifiers.Abstract) != 0) modifiers = modifiers + "abstract";
-            if ((this.Modifiers & Modifiers.Virtual) != 0) modifiers = modifiers + "virtual";
-            if ((this.Modifiers & Modifiers.Static) != 0) modifiers = modifiers + "static";
+            if ((this.Modifiers & Modifiers.Abstract) != 0) modifiers = modifiers + "abstract ";
+            if ((this.Modifiers & Modifiers.Virtual) != 0) modifiers = modifiers + "virtual ";
+            if ((this.Modifiers & Modifiers.Static) != 0) modifiers = modifiers + "static ";
             return modifiers;
         }
 
         public override string ToString()
         {
             StringBuilder res = new StringBuilder();
-            res.Append(this.AccessModifier);
-            res.Append(GetModifier());
-            res.Append(" " + this.Name);
-            // var accessors = propertyInfo.GetAccessors(true);
-            // foreach (var accessor in accessors)
-            // {
-            //     if (accessor.IsSpecialName)
-            //     {
-            //         result.Append(" { ");
-            //         result.Append(accessor.Name);
-            //         result.Append(" } ");
-            //     }
-            // }
+            res.Append(this.AccessModifier + " ");
+            res.Append(ConvertModifierToString());
+            res.Append(this.PropertyType + " ");
+            res.Append(this.Name);
+            foreach (var accessor in this.Accessors)
+            {
+                if (accessor.IsSpecialName)
+                {
+                    res.Append(" { ");
+                    if (accessor.IsPrivate) res.Append("private ");
+                    res.Append(accessor.Name);
+                    res.Append(" } ");
+                }
+            }
 
             return res.ToString();
         }

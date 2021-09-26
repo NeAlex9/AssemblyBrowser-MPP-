@@ -9,6 +9,8 @@ namespace AssemblyBrowserLib
 {
     public class AssemblyBrowser
     {
+        private BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy;
+
         public Dictionary<string, List<TypeData>> NamespaceTypesDic { get; private set; }
 
         public AssemblyBrowser()
@@ -23,13 +25,13 @@ namespace AssemblyBrowserLib
             foreach (var assemblyType in assemblyTypes)
             {
                 var typeData = GetTypeData(assemblyType);
-                if (this.NamespaceTypesDic.TryGetValue(assemblyType.Namespace, out List<TypeData> namespaceTypes))
+                if (this.NamespaceTypesDic.TryGetValue(assemblyType?.Namespace ?? "No namespace", out List<TypeData> namespaceTypes))
                 {
                     namespaceTypes.Add(typeData);
                 }
                 else
                 {
-                    this.NamespaceTypesDic.Add(assemblyType.Namespace, new List<TypeData>() { typeData });
+                    this.NamespaceTypesDic.Add(assemblyType?.Namespace ?? "No namespace", new List<TypeData>() { typeData });
                 }
             }
 
@@ -40,10 +42,22 @@ namespace AssemblyBrowserLib
             }
 
             return new AssemblyData(namespaces);
-        }       
+        }
+
+        private Modifiers GetTypesModifier(Type type)
+        {
+            Modifiers modifier = (Modifiers)0;
+            if (type.IsAbstract && type.IsSealed)  
+                return modifier |= Modifiers.Static;
+            if (type.IsAbstract) modifier |= Modifiers.Abstract;
+            if (type.IsSealed) modifier |= Modifiers.Sealed;
+
+            return modifier;
+        }
 
         private string GetTypeName(Type type)
         {
+            //if (type.IsDe)
             if (type.IsClass) return "class";
             if (type.IsInterface) return "interface";
             if (type.IsEnum) return "enum";
@@ -60,32 +74,38 @@ namespace AssemblyBrowserLib
 
         private TypeData GetTypeData(Type type)
         {
-            var members = new List<TypesMember>();
-            foreach (var method in type.GetMethods()) members.Add(GetMethod(method));
+            var members = new List<DataContainer>();
+            foreach (var method in type.GetMethods(bindingFlags))
+            {
+                if (!method.IsSpecialName)
+                {
+                    members.Add(GetMethod(method));
+                }
+            }
 
-            foreach (var field in type.GetFields()) members.Add(GetFiled(field));
+            foreach (var field in type.GetFields(bindingFlags)) members.Add(GetFiled(field));
 
-            foreach (var property in type.GetProperties()) members.Add(GetProperty(property));
+            foreach (var property in type.GetProperties(bindingFlags)) members.Add(GetProperty(property));
 
-            return new TypeData(GetTypeName(type), type.Name, GetTypeAccessModifier(type), members);
+            return new TypeData(GetTypeName(type), type.Name, GetTypeAccessModifier(type), members, GetTypesModifier(type));
         }
 
-        private string GetAccessModifier(dynamic methodInf)
+        private string GetAccessModifier(dynamic inf)
         {
-            if (methodInf.IsPrivate) return "private";
-            if (methodInf.IsPublic) return "public";
-            if (methodInf.IsAssembly) return "internal";
-            if (methodInf.IsFamilyAndAssembly) return "private protected";
+            if (inf.IsPrivate) return "private";
+            if (inf.IsPublic) return "public";
+            if (inf.IsAssembly) return "internal";
+            if (inf.IsFamilyAndAssembly) return "private protected";
             return "protected internal";
-        }   //????????????
+        }
 
         private Modifiers GetMethodModifiers(MethodInfo methodInf)
         {
             Modifiers modifier = (Modifiers)0;
             if (methodInf.IsAbstract) modifier |= Modifiers.Abstract;
-            if (methodInf.IsVirtual) modifier |= Modifiers.Virtual;
+            else if (methodInf.IsVirtual) modifier |= Modifiers.Virtual;
             if (methodInf.IsStatic) modifier |= Modifiers.Static;
-            if (methodInf.IsFinal && (methodInf.IsVirtual || methodInf.IsVirtual)) modifier |= Modifiers.Sealed;
+            if (methodInf.IsFinal && (methodInf.IsVirtual || methodInf.IsAbstract)) modifier |= Modifiers.Sealed;
 
             return modifier;
         }
@@ -101,7 +121,7 @@ namespace AssemblyBrowserLib
             return parameters;
         }
 
-        private TypesMember GetMethod(MethodInfo methodInf)
+        private DataContainer GetMethod(MethodInfo methodInf)
         {
             return new MethodData(methodInf.Name, GetAccessModifier(methodInf),
                 methodInf.ReturnType.Name, GetParameters(methodInf), GetMethodModifiers(methodInf));
@@ -116,7 +136,7 @@ namespace AssemblyBrowserLib
             return modifier;
         }
 
-        private TypesMember GetFiled(FieldInfo fieldInfo)
+        private DataContainer GetFiled(FieldInfo fieldInfo)
         {
             return new FieldData(fieldInfo.Name, GetAccessModifier(fieldInfo), fieldInfo.FieldType.Name, GetFieldModifiers(fieldInfo));
         }
@@ -127,10 +147,10 @@ namespace AssemblyBrowserLib
             return modifier;
         }
 
-        private TypesMember GetProperty(PropertyInfo propertyInfo)
+        private DataContainer GetProperty(PropertyInfo propertyInfo)
         {
-            return new PropertyData(propertyInfo.Name, GetAccessModifier(propertyInfo),
-                propertyInfo.PropertyType.Name, GetPropertyModifiers(propertyInfo));
+            return new PropertyData(propertyInfo.Name, GetAccessModifier(propertyInfo.GetAccessors(true)[0]),
+                propertyInfo.PropertyType.Name, GetPropertyModifiers(propertyInfo), propertyInfo.GetAccessors(true));
         }
     }
 }

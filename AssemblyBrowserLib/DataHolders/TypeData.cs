@@ -6,22 +6,26 @@ using System.Threading.Tasks;
 
 namespace AssemblyBrowserLib
 {
-    public class TypeData // struct, enum, class, interface
+    public class TypeData : DataContainer
     {
-        public string Type { get; private set; }
-        public string Name { get; private set; }
-        public string AccessModifier{ get; private set; }
+        public List<DataContainer> Members{ get; private set; }
 
-        // abstract, sealed
-
-        public List<TypesMember> Members{ get; private set; }
-
-        public TypeData(string type, string name, string accessModifier, List<TypesMember> members)
+        protected override string ConvertModifierToString()
         {
-            this.Type = type;
-            this.Name = name;
-            this.AccessModifier = accessModifier;
+            if ((this.Modifiers & (Modifiers.Sealed | Modifiers.Abstract)) != 0) return "sealed ";
+            if ((this.Modifiers & Modifiers.Abstract) != 0) return "abstract ";
+            if ((this.Modifiers & Modifiers.Sealed) != 0) return "static ";
+            return "";
+        }
+
+        public TypeData(string type, string name, string accessModifier, List<DataContainer> members, Modifiers modifiers) : base(name, accessModifier, modifiers)
+        {
             this.Members = members;
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -6,22 +6,19 @@ using System.Threading.Tasks;
 
 namespace AssemblyBrowserLib
 {
-    public class MethodData : TypesMember
+    public class MethodData : DataContainer
     {
         public string ReturnType { get; private set; }
 
         public Dictionary<string, string> Parameters { get; private set; }
 
-        public Modifiers Modifiers { get; private set; }
-
-        public MethodData(string name, string accessModifier, string returnType, Dictionary<string, string> parameters, Modifiers methodModifiers) : base(name, accessModifier)
+        public MethodData(string name, string accessModifier, string returnType, Dictionary<string, string> parameters, Modifiers methodModifiers) : base(name, accessModifier, methodModifiers)
         {
             this.ReturnType = returnType;
             this.Parameters = parameters;
-            this.Modifiers = methodModifiers;
         }
 
-        private string GetModifier()
+        protected override string ConvertModifierToString()
         {
             string modifiers = string.Empty;
             if ((this.Modifiers & Modifiers.Sealed) != 0) modifiers = modifiers + "sealed ";
@@ -35,7 +32,7 @@ namespace AssemblyBrowserLib
         {
             string res = string.Empty;
             res += this.AccessModifier;
-            res += " " + GetModifier();
+            res += " " + ConvertModifierToString();
             res += " " + this.ReturnType;
             res += " " + this.Name;
             res += "(";

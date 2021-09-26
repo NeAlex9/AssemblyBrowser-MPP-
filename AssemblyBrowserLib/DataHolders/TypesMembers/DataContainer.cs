@@ -6,15 +6,19 @@ using System.Threading.Tasks;
 
 namespace AssemblyBrowserLib
 {
-    public abstract class TypesMember
+    public abstract class DataContainer
     {
         public string Name{ get; private set; }
         public string AccessModifier{ get; private set; }
+        public Modifiers Modifiers{ get; private set; }
 
-        protected TypesMember(string name, string accessModifier)
+        protected abstract string ConvertModifierToString();
+
+        protected DataContainer(string name, string accessModifier, Modifiers modifiers)
         {
             this.Name = name;
             this.AccessModifier = accessModifier;
+            this.Modifiers = modifiers;
         }
 
         public abstract override string ToString();
