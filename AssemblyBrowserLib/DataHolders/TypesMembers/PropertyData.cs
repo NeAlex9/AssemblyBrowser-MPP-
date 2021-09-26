@@ -18,6 +18,7 @@ namespace AssemblyBrowserLib
         {
             this.PropertyType = propertyType;
             this.Accessors = accessors;
+            this.ContainerDeclaration = ToString();
         }
 
         protected override string ConvertModifierToString()
@@ -30,7 +31,7 @@ namespace AssemblyBrowserLib
             return modifiers;
         }
 
-        public override string ToString()
+        public sealed override string ToString()
         {
             StringBuilder res = new StringBuilder();
             res.Append(this.AccessModifier + " ");

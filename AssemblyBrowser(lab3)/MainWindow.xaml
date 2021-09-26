@@ -3,10 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AssemblyBrowser_lab3_"
+        xmlns:local="clr-na
+ ace:AssemblyBrowser_lab3_"
         mc:Ignorable="d"
-        Title="MainWindow" Height="492.8" Width="876.4" ResizeMode="CanResizeWithGrip">
-    <Grid Margin="3,6,-0.4,0">
-        
+        Title="MainWindow" Height="627.8" Width="1266.3" ResizeMode="CanResizeWithGrip">
+    <Grid Margin="3,6,3.6,0.2">
+        <TreeView ItemsSource="{Binding NamespacesData}" Margin="0,0,-1.6,0.2" HorizontalAlignment="Left" Width="1255">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Types}">
+                    <TextBlock Text="{Binding Name}" FontSize="20"/>
+                    <HierarchicalDataTemplate.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Path=Members}">
+                            <TextBlock Text="{Binding ContainerDeclaration}" FontSize="20"/>
+                        </HierarchicalDataTemplate>
+                    </HierarchicalDataTemplate.ItemTemplate>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
     </Grid>
 </Window>

@@ -18,7 +18,7 @@ namespace AssemblyBrowserLib
             this.NamespaceTypesDic = new Dictionary<string, List<TypeData>>();
         }
 
-        public AssemblyData GetAssemblyData(string path)
+        public List<NamespaceData> GetAssemblyData(string path)
         {
             var assembly = Assembly.LoadFrom(path);
             var assemblyTypes = assembly.GetTypes();
@@ -41,7 +41,7 @@ namespace AssemblyBrowserLib
                 namespaces.Add(new NamespaceData(pair.Key, pair.Value));
             }
 
-            return new AssemblyData(namespaces);
+            return namespaces;
         }
 
         private Modifiers GetTypesModifier(Type type)

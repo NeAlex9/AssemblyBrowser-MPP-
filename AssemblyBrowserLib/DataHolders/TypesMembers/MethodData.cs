@@ -16,6 +16,7 @@ namespace AssemblyBrowserLib
         {
             this.ReturnType = returnType;
             this.Parameters = parameters;
+            this.ContainerDeclaration = this.ToString();
         }
 
         protected override string ConvertModifierToString()
@@ -28,7 +29,7 @@ namespace AssemblyBrowserLib
             return modifiers;
         }
 
-        public override string ToString()
+        public sealed override string ToString()
         {
             string res = string.Empty;
             res += this.AccessModifier;

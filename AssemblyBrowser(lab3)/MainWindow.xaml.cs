@@ -23,6 +23,8 @@ namespace AssemblyBrowser_lab3_
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = new AssemblyViewModel();
         }
     }
 }

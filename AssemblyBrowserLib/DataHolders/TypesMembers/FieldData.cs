@@ -13,6 +13,7 @@ namespace AssemblyBrowserLib
         public FieldData(string name, string accessModifier, string fieldType, Modifiers methodModifiers) : base(name, accessModifier, methodModifiers)
         {
             this.FieldType = fieldType;
+            this.ContainerDeclaration = this.ToString();
         }
 
         protected override string ConvertModifierToString()
@@ -23,7 +24,7 @@ namespace AssemblyBrowserLib
             return modifiers;
         }
 
-        public override string ToString()
+        public sealed override string ToString()
         {
             var res = new StringBuilder();
             res.Append(this.AccessModifier + " ");

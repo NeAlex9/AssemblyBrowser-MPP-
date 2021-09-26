@@ -11,6 +11,7 @@ namespace AssemblyBrowserLib
         public string Name{ get; private set; }
         public string AccessModifier{ get; private set; }
         public Modifiers Modifiers{ get; private set; }
+        public string ContainerDeclaration{ get; protected set; }
 
         protected abstract string ConvertModifierToString();
 
