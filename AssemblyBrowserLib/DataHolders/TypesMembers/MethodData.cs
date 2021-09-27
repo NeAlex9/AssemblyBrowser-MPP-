@@ -39,7 +39,7 @@ namespace AssemblyBrowserLib
             res += "(";
             foreach (var pair in this.Parameters)
             {
-                res += pair.Key + " " + pair.Value + ", ";
+                res += pair.Value + " " + pair.Key + ", ";
             }
 
             if (this.Parameters.Count > 0) res.Remove(res.Length - 2, 2);

@@ -10,7 +10,7 @@ namespace AssemblyBrowserLib
     public class AssemblyBrowser
     {
         private BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-       
+
         public Dictionary<string, List<TypeData>> NamespaceTypesDic { get; private set; }
 
         public AssemblyBrowser()
@@ -48,7 +48,7 @@ namespace AssemblyBrowserLib
         private Modifiers GetTypesModifier(Type type)
         {
             Modifiers modifier = (Modifiers)0;
-            if (type.IsAbstract && type.IsSealed)  
+            if (type.IsAbstract && type.IsSealed)
                 return modifier |= Modifiers.Static;
             if (type.IsAbstract) modifier |= Modifiers.Abstract;
 
@@ -70,6 +70,27 @@ namespace AssemblyBrowserLib
             if (type.IsNotPublic) return "internal";
 
             return "public";
+        }
+
+        private string ConvertTypeNameToString(Type type)
+        {
+            if (type.IsGenericType)
+            {
+                var nestedTypes = type.GetGenericArguments();
+                var res = type.Name.Remove(type.Name.Length - 2, 2) + "<";
+                var stringRepresentation = string.Empty;
+                foreach (var nestedType in nestedTypes)
+                {
+                    stringRepresentation += ConvertTypeNameToString(nestedType) + ", ";
+                }
+
+                stringRepresentation = stringRepresentation.Length > 0 ? stringRepresentation.Remove(stringRepresentation.Length - 2, 2) : stringRepresentation;
+                return res + stringRepresentation + ">";
+            }
+            else
+            {
+                return type.Name;
+            }
         }
 
         private TypeData GetTypeData(Type type)
@@ -129,7 +150,7 @@ namespace AssemblyBrowserLib
             {
                 foreach (ParameterInfo parameterInfo in methodInf.GetParameters())
                 {
-                    parameters.Add(parameterInfo.Name, parameterInfo.ParameterType.Name);
+                    parameters.Add(parameterInfo.Name, ConvertTypeNameToString(parameterInfo.ParameterType));
                 }
 
                 return parameters;
@@ -163,7 +184,7 @@ namespace AssemblyBrowserLib
 
         private DataContainer GetFiled(FieldInfo fieldInfo)
         {
-            return new FieldData(fieldInfo.Name, GetAccessModifier(fieldInfo), fieldInfo.FieldType.Name, GetFieldModifiers(fieldInfo));
+            return new FieldData(fieldInfo.Name, GetAccessModifier(fieldInfo), ConvertTypeNameToString(fieldInfo.FieldType), GetFieldModifiers(fieldInfo));
         }
 
         private Modifiers GetPropertyModifiers(PropertyInfo propertyInfo)
@@ -175,7 +196,7 @@ namespace AssemblyBrowserLib
         private DataContainer GetProperty(PropertyInfo propertyInfo)
         {
             return new PropertyData(propertyInfo.Name, GetAccessModifier(propertyInfo.GetAccessors(true)[0]),
-                propertyInfo.PropertyType.Name, GetPropertyModifiers(propertyInfo), propertyInfo.GetAccessors(true));
+                ConvertTypeNameToString(propertyInfo.PropertyType), GetPropertyModifiers(propertyInfo), propertyInfo.GetAccessors(true));
         }
     }
 }

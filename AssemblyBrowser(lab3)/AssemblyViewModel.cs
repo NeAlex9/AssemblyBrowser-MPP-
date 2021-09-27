@@ -13,8 +13,9 @@ using Microsoft.Win32;
 namespace AssemblyBrowser_lab3_
 {
     public class AssemblyViewModel : INotifyPropertyChanged
-    {
-        public ObservableCollection<NamespaceData> NamespacesData{ get; private set; }
+    { 
+        public List<NamespaceData> NamespacesData{ get; private set; }
+        public NamespaceData n;
 
         private BrowsCommand _openCommand;
         public BrowsCommand OpenCommand
@@ -30,9 +31,8 @@ namespace AssemblyBrowser_lab3_
                                if (openFileDialog.ShowDialog() == true)
                                {
                                    var list = this.AssemblyBrowser.GetAssemblyData(openFileDialog.FileName);
-                                   this.NamespacesData.Clear();
-                                   foreach (var item in list)
-                                       this.NamespacesData.Add(item);
+                                   this.NamespacesData = list;
+                                   OnPropertyChanged(nameof(NamespacesData));
                                }
                            }
                            catch (Exception e)
@@ -48,14 +48,13 @@ namespace AssemblyBrowser_lab3_
         public AssemblyViewModel()
         {
             this.AssemblyBrowser = new AssemblyBrowser();
-            this.NamespacesData = new ObservableCollection<NamespaceData>();
+            this.NamespacesData = new List<NamespaceData>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }
