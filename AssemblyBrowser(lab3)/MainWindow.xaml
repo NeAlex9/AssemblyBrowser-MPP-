@@ -20,6 +20,11 @@
                     <HierarchicalDataTemplate.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Path=Members}">
                             <TextBlock Text="{Binding ContainerDeclaration}" FontSize="20"/>
+                            <HierarchicalDataTemplate.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ContainerDeclaration}" FontSize="20"/>
+                                </DataTemplate>
+                            </HierarchicalDataTemplate.ItemTemplate>
                         </HierarchicalDataTemplate>
                     </HierarchicalDataTemplate.ItemTemplate>
                 </HierarchicalDataTemplate>
