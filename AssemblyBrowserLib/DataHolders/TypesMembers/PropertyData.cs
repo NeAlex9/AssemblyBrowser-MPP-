@@ -38,17 +38,22 @@ namespace AssemblyBrowserLib
             res.Append(ConvertModifierToString());
             res.Append(this.PropertyType + " ");
             res.Append(this.Name);
+            res.Append(" { ");
+            string acc = string.Empty;
             foreach (var accessor in this.Accessors)
             {
                 if (accessor.IsSpecialName)
                 {
-                    res.Append(" { ");
-                    if (accessor.IsPrivate) res.Append("private ");
-                    res.Append(accessor.Name);
-                    res.Append(" } ");
+                    
+                    if (accessor.IsPrivate) acc += "private ";
+                    acc += accessor.Name;
+                    acc += ", ";
                 }
             }
 
+            if (acc.Length > 0) acc = acc.Remove(acc.Length - 2, 2);
+            res.Append(acc);
+            res.Append(" } ");
             return res.ToString();
         }
 
