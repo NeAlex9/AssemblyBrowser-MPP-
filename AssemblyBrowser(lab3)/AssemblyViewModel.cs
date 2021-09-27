@@ -15,7 +15,6 @@ namespace AssemblyBrowser_lab3_
     public class AssemblyViewModel : INotifyPropertyChanged
     { 
         public List<NamespaceData> NamespacesData{ get; private set; }
-        public NamespaceData n;
 
         private BrowsCommand _openCommand;
         public BrowsCommand OpenCommand
