@@ -6,9 +6,14 @@
         xmlns:local="clr-na
  ace:AssemblyBrowser_lab3_"
         mc:Ignorable="d"
-        Title="MainWindow" Height="627.8" Width="1266.3" ResizeMode="CanResizeWithGrip">
-    <Grid Margin="3,6,3.6,0.2">
-        <TreeView ItemsSource="{Binding NamespacesData}" Margin="0,0,-1.6,0.2" HorizontalAlignment="Left" Width="1255">
+        Title="MainWindow" Height="727.8" Width="1296.35" ResizeMode="NoResize">
+    <Grid Margin="3,6,3.6,10.4">
+        <Menu Margin="10,0,1178,647" >
+            <MenuItem Height="25" Width="85" Header="Menu" FontSize="14">
+                <MenuItem Header="Open" Command="{Binding OpenCommand}" FontSize="13" Height="20" Margin="0,0,-1.8,0"/>
+            </MenuItem>
+        </Menu>
+        <TreeView ItemsSource="{Binding NamespacesData}" Margin="0,40,0,-2.6" HorizontalAlignment="Left" Width="1275">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Path=Types}">
                     <TextBlock Text="{Binding Name}" FontSize="20"/>

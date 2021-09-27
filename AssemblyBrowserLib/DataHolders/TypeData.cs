@@ -14,7 +14,7 @@ namespace AssemblyBrowserLib
 
         protected override string ConvertModifierToString()
         {
-            if ((this.Modifiers & (Modifiers.Sealed | Modifiers.Abstract)) != 0) return "sealed ";
+            //if ((this.Modifiers & (Modifiers.Sealed | Modifiers.Abstract)) != 0) return "sealed ";
             if ((this.Modifiers & Modifiers.Abstract) != 0) return "abstract ";
             if ((this.Modifiers & Modifiers.Sealed) != 0) return "static ";
             return "";

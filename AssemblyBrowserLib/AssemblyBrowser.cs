@@ -20,6 +20,7 @@ namespace AssemblyBrowserLib
 
         public List<NamespaceData> GetAssemblyData(string path)
         {
+            this.NamespaceTypesDic.Clear();
             var assembly = Assembly.LoadFrom(path);
             var assemblyTypes = assembly.GetTypes();
             foreach (var assemblyType in assemblyTypes)
@@ -50,7 +51,6 @@ namespace AssemblyBrowserLib
             if (type.IsAbstract && type.IsSealed)  
                 return modifier |= Modifiers.Static;
             if (type.IsAbstract) modifier |= Modifiers.Abstract;
-            if (type.IsSealed) modifier |= Modifiers.Sealed;
 
             return modifier;
         }
@@ -117,7 +117,7 @@ namespace AssemblyBrowserLib
             if (methodInf.IsAbstract) modifier |= Modifiers.Abstract;
             else if (methodInf.IsVirtual) modifier |= Modifiers.Virtual;
             if (methodInf.IsStatic) modifier |= Modifiers.Static;
-            if (methodInf.IsFinal && (methodInf.IsVirtual || methodInf.IsAbstract)) modifier |= Modifiers.Sealed;
+            //if (methodInf.IsFinal && (methodInf.IsVirtual || methodInf.IsAbstract)) modifier |= Modifiers.Sealed;
 
             return modifier;
         }

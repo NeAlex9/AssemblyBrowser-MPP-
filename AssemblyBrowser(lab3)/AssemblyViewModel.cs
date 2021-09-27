@@ -6,26 +6,49 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using AssemblyBrowserLib;
+using Microsoft.Win32;
 
 namespace AssemblyBrowser_lab3_
 {
     public class AssemblyViewModel : INotifyPropertyChanged
     {
-        public List<NamespaceData> NamespacesData{ get; private set; }
+        public ObservableCollection<NamespaceData> NamespacesData{ get; private set; }
+
+        private BrowsCommand _openCommand;
+        public BrowsCommand OpenCommand
+        {
+            get
+            {
+                return _openCommand ??
+                       (_openCommand = new BrowsCommand(obj =>
+                       {
+                           try
+                           {
+                               OpenFileDialog openFileDialog = new OpenFileDialog();
+                               if (openFileDialog.ShowDialog() == true)
+                               {
+                                   var list = this.AssemblyBrowser.GetAssemblyData(openFileDialog.FileName);
+                                   this.NamespacesData.Clear();
+                                   foreach (var item in list)
+                                       this.NamespacesData.Add(item);
+                               }
+                           }
+                           catch (Exception e)
+                           {
+                               MessageBox.Show("failed to load assembly");
+                           }
+                       }) );
+            }
+        }
 
         public AssemblyBrowser AssemblyBrowser{ get; }
 
         public AssemblyViewModel()
         {
             this.AssemblyBrowser = new AssemblyBrowser();
-            this.NamespacesData = this.AssemblyBrowser.GetAssemblyData(@"B:\BSUIR\3 course\5 sem\СПП\lab\Tracer(lab1)\Tracer(lab1)\bin\Debug\NTracer.dll");
-
-        }
-
-        public void LoadAssembly(string path)
-        {
-            this.NamespacesData = this.AssemblyBrowser.GetAssemblyData(path);
+            this.NamespacesData = new ObservableCollection<NamespaceData>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
