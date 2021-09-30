@@ -1,12 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace AssemblyBrowserLib
+namespace AssemblyBrowserLib.DataHolders.TypesMembers
 {
+    public class PropertyProcessor : MemberProcessor
+    {
+        public PropertyInfo PropertyInfo{ get; private set; }
+
+        protected override string GetAccessModifier()
+        {
+            var accessor = PropertyInfo.GetAccessors(true)[0];
+            if (accessor.IsPrivate) return "private";
+            if (accessor.IsPublic) return "public";
+            if (accessor.IsAssembly) return "internal";
+            if (accessor.IsFamilyAndAssembly) return "private protected";
+
+            return "protected internal";
+        }
+
+        protected override Modifiers GetModifiers()
+        {
+            var accessor = PropertyInfo.GetAccessors(true)[0];
+            Modifiers modifier = (Modifiers)0;
+            if (accessor.IsAbstract) modifier |= Modifiers.Abstract;
+            else if (accessor.IsVirtual) modifier |= Modifiers.Virtual;
+            if (accessor.IsStatic) modifier |= Modifiers.Static;
+
+            return modifier;
+        }
+
+        public override DataContainer GetData(MemberInfo data)
+        {
+            PropertyInfo = (PropertyInfo)data;
+            return new PropertyData(PropertyInfo.Name, GetAccessModifier(),
+                ConvertTypeNameToString(PropertyInfo.PropertyType), GetModifiers(), PropertyInfo.GetAccessors(true));
+        }
+    }
+
     public class PropertyData : DataContainer
     {
         public string PropertyType { get; private set; }
@@ -59,3 +89,4 @@ namespace AssemblyBrowserLib
 
     }
 }
+

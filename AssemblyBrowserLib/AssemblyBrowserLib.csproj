@@ -43,12 +43,13 @@
   <ItemGroup>
     <Compile Include="AssemblyBrowser.cs" />
     <Compile Include="DataHolders\Modifiers.cs" />
-    <Compile Include="DataHolders\TypesMembers\FieldData.cs" />
-    <Compile Include="DataHolders\TypesMembers\MethodData.cs" />
+    <Compile Include="DataHolders\TypesMembers\FieldProcessor.cs" />
+    <Compile Include="DataHolders\TypesMembers\MemberProcessor.cs" />
+    <Compile Include="DataHolders\TypesMembers\MethodProcessor.cs" />
     <Compile Include="DataHolders\NamespaceData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DataHolders\TypesMembers\PropertyData.cs" />
-    <Compile Include="DataHolders\TypeData.cs" />
+    <Compile Include="DataHolders\TypesMembers\PropertyProcessor.cs" />
+    <Compile Include="DataHolders\TypeProcessor.cs" />
     <Compile Include="DataHolders\DataContainer.cs" />
   </ItemGroup>
   <ItemGroup />

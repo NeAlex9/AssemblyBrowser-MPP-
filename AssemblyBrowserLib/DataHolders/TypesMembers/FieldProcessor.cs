@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace AssemblyBrowserLib
+namespace AssemblyBrowserLib.DataHolders.TypesMembers
 {
-    public class FieldProcessor : DataProcessor
+    public class FieldProcessor : MemberProcessor
     {
         public FieldInfo FieldInfo { get; private set; }
 

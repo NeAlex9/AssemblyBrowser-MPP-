@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using AssemblyBrowserLib;
+using AssemblyBrowserLib.DataHolders;
 using Microsoft.Win32;
 
 namespace AssemblyBrowser_lab3_

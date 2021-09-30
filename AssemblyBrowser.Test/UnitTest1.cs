@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using AssemblyBrowserLib;
+using AssemblyBrowserLib.DataHolders;
+using AssemblyBrowserLib.DataHolders.TypesMembers;
 using NUnit;
 using NUnit.Framework;
 
