@@ -184,7 +184,7 @@ namespace AssemblyBrowser.Test
         {
             var namespaceData = GetNamespace(Path, 0);
             var count = namespaceData.Types.Count;
-            Assert.That(1, Is.EqualTo(count));
+            Assert.That(4, Is.EqualTo(count));
         }
 
         [Test]
@@ -192,7 +192,17 @@ namespace AssemblyBrowser.Test
         {
             var type = GetType(Path, 0);
             var count = type.Members.Count;
-            Assert.That(13, Is.EqualTo(count));
+            Assert.That(14, Is.EqualTo(count));
+        }
+
+        [Test]
+        public void GetAssemblyData_ExtensionMethod_ReturnCorrectResult()
+        {
+            var data = _assemblyBrowser.GetAssemblyData(
+                Path);
+            var type = (MethodData)data[0].Types[0].Members[13];
+            var actual = "public static Void Example(NoNamespaceClass1 t)(extension method)";
+            Assert.That(actual, Is.EqualTo(type.ToString()));
         }
     }
 }
