@@ -10,11 +10,12 @@ namespace AssemblyBrowserLib
     public class AssemblyBrowser
     {
         private BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-
+        public FieldProcessor FieldProcessor{ get; private set; }
         public Dictionary<string, List<TypeData>> NamespaceTypesDic { get; private set; }
 
         public AssemblyBrowser()
         {
+            this.FieldProcessor = new FieldProcessor();
             this.NamespaceTypesDic = new Dictionary<string, List<TypeData>>();
         }
 
@@ -91,7 +92,7 @@ namespace AssemblyBrowserLib
             {
                 return type.Name;
             }
-        }
+        }   ///!
 
         private TypeData GetTypeData(Type type)
         {
@@ -130,7 +131,7 @@ namespace AssemblyBrowserLib
             {
                 return "";
             }
-        }
+        } 
 
         private Modifiers GetMethodModifiers(MethodInfo methodInf)
         {
@@ -173,19 +174,19 @@ namespace AssemblyBrowserLib
                 "", GetParameters(constructor), 0);
         }
 
-        private Modifiers GetFieldModifiers(FieldInfo fieldInfo)
+        private Modifiers GetFieldModifiers(FieldInfo fieldInfo) 
         {
             Modifiers modifier = (Modifiers)0;
             if (fieldInfo.IsStatic) modifier |= Modifiers.Static;
             if (fieldInfo.IsInitOnly) modifier |= Modifiers.Readonly;
 
             return modifier;
-        }
+        }   ///!
 
         private DataContainer GetFiled(FieldInfo fieldInfo)
         {
             return new FieldData(fieldInfo.Name, GetAccessModifier(fieldInfo), ConvertTypeNameToString(fieldInfo.FieldType), GetFieldModifiers(fieldInfo));
-        }
+        }   ///!
 
         private Modifiers GetPropertyModifiers(PropertyInfo propertyInfo)
         {
